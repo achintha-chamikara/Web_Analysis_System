@@ -8,9 +8,19 @@ init(autoreset=True)
 if __name__ == "__main__":
     url = input("Enter website URL (e.g. https://example.com): ").strip()
 
+    if not url:
+        print(Fore.RED + "No URL provided. Exiting.")
+        raise SystemExit
+
     # Phase 1 - Crawl
+    print(Fore.CYAN + "\n  Starting crawler...")
     crawler = WebsiteCrawler(base_url=url, max_pages=20)
     results = crawler.crawl()
+
+    if not results:
+        print(Fore.RED + "No pages were crawled. Dashboard will not be created.")
+        raise SystemExit
+
     crawler.save_results()
 
     # Phase 2 - Save to database
@@ -20,7 +30,7 @@ if __name__ == "__main__":
     summary, df = db.get_summary(session_id)
 
     print(Fore.CYAN + f"\n{'='*55}")
-    print(Fore.CYAN + f"  Website Summary Report")
+    print(Fore.CYAN + "  Website Summary Report")
     print(Fore.CYAN + f"{'='*55}")
     for key, value in summary.items():
         print(Fore.YELLOW + f"  {key:<22}" + Fore.WHITE + f": {value}")
@@ -30,5 +40,6 @@ if __name__ == "__main__":
     # Phase 3 - Dashboard
     print(Fore.CYAN + "  Launching dashboard...")
     print(Fore.YELLOW + "  Open your browser at: http://127.0.0.1:8050\n")
+
     app = create_dashboard()
-    app.run(debug=False)
+    app.run(debug=False, host="127.0.0.1", port=8050)
