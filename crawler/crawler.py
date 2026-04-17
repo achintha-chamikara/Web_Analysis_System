@@ -10,7 +10,7 @@ init(autoreset=True)
 
 
 class WebsiteCrawler:
-    def __init__(self, base_url, max_pages=50):
+    def __init__(self, base_url, max_pages=20):
         self.base_url = base_url
         self.domain = urlparse(base_url).netloc
         self.max_pages = max_pages
@@ -42,20 +42,20 @@ class WebsiteCrawler:
             load_time = round(time.time() - start_time, 2)
             soup = BeautifulSoup(response.text, "html.parser")
 
-            # Extract internal links
+            # Internal links
             links = []
             for a in soup.find_all("a", href=True):
                 full_url = urljoin(url, a["href"])
                 if self.is_valid_url(full_url):
                     links.append(full_url)
 
-            # Extract images
+            # Images
             images = []
             for img in soup.find_all("img", src=True):
                 full_img = urljoin(url, img["src"])
                 images.append(full_img)
 
-            # Extract meta description
+            # Meta description
             meta_desc = ""
             meta_tag = soup.find("meta", attrs={"name": "description"})
             if meta_tag:
@@ -73,11 +73,10 @@ class WebsiteCrawler:
                 "load_time_seconds": load_time,
                 "word_count": len(soup.get_text(" ", strip=True).split()),
                 "image_count": len(images),
-                "internal_links": list(set(links)),
                 "internal_links_count": len(set(links)),
                 "h1_tags": [h.get_text(strip=True) for h in soup.find_all("h1")],
                 "h2_tags": [h.get_text(strip=True) for h in soup.find_all("h2")],
-                "crawled_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "crawled_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
 
             return page_info, list(set(links))
@@ -122,12 +121,11 @@ class WebsiteCrawler:
 
             if page_info:
                 self.pages_data.append(page_info)
-
                 for link in links:
                     if link not in self.visited and link not in queue:
                         queue.append(link)
 
-            time.sleep(0.5)  # polite crawling
+            time.sleep(0.5)
 
         print(Fore.CYAN + f"\n{'=' * 55}")
         print(Fore.GREEN + "  Crawling Complete!")

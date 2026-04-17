@@ -1,6 +1,5 @@
 from crawler.crawler import WebsiteCrawler
 from data.database import DatabaseManager
-from dashboard.dashboard import create_dashboard
 from colorama import Fore, init
 
 init(autoreset=True)
@@ -18,7 +17,7 @@ if __name__ == "__main__":
     results = crawler.crawl()
 
     if not results:
-        print(Fore.RED + "No pages were crawled. Dashboard will not be created.")
+        print(Fore.RED + "No pages were crawled. Exiting.")
         raise SystemExit
 
     crawler.save_results()
@@ -36,10 +35,3 @@ if __name__ == "__main__":
         print(Fore.YELLOW + f"  {key:<22}" + Fore.WHITE + f": {value}")
     print(Fore.CYAN + f"{'='*55}\n")
     db.close()
-
-    # Phase 3 - Dashboard
-    print(Fore.CYAN + "  Launching dashboard...")
-    print(Fore.YELLOW + "  Open your browser at: http://127.0.0.1:8050\n")
-
-    app = create_dashboard()
-    app.run(debug=False, host="127.0.0.1", port=8050)
