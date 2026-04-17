@@ -1,5 +1,6 @@
 from crawler.crawler import WebsiteCrawler
 from data.database import DatabaseManager
+from analysis.insights import build_insights
 from colorama import Fore, init
 
 init(autoreset=True)
@@ -34,4 +35,13 @@ if __name__ == "__main__":
     for key, value in summary.items():
         print(Fore.YELLOW + f"  {key:<22}" + Fore.WHITE + f": {value}")
     print(Fore.CYAN + f"{'='*55}\n")
+
+    # Phase 3 - Insights
+    print(Fore.CYAN + "  Generating insights...\n")
+    insights = build_insights(df)
+
+    print(Fore.CYAN + "  Top Important Pages:")
+    for item in insights["top_important_pages"]:
+        print(Fore.YELLOW + f"   - {item['title']} ({item['url']}) -> {item['importance_score']:.2f}")
+
     db.close()
