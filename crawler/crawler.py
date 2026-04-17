@@ -42,20 +42,17 @@ class WebsiteCrawler:
             load_time = round(time.time() - start_time, 2)
             soup = BeautifulSoup(response.text, "html.parser")
 
-            # Internal links
             links = []
             for a in soup.find_all("a", href=True):
                 full_url = urljoin(url, a["href"])
                 if self.is_valid_url(full_url):
                     links.append(full_url)
 
-            # Images
             images = []
             for img in soup.find_all("img", src=True):
                 full_img = urljoin(url, img["src"])
                 images.append(full_img)
 
-            # Meta description
             meta_desc = ""
             meta_tag = soup.find("meta", attrs={"name": "description"})
             if meta_tag:
@@ -76,7 +73,7 @@ class WebsiteCrawler:
                 "internal_links_count": len(set(links)),
                 "h1_tags": [h.get_text(strip=True) for h in soup.find_all("h1")],
                 "h2_tags": [h.get_text(strip=True) for h in soup.find_all("h2")],
-                "crawled_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                "crawled_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
 
             return page_info, list(set(links))

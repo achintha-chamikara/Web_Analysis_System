@@ -4,7 +4,7 @@
         "status_code": 200,
         "title": "Example Domain",
         "meta_description": "",
-        "load_time_seconds": 1.37,
+        "load_time_seconds": 1.04,
         "word_count": 21,
         "image_count": 0,
         "internal_links_count": 0,
@@ -12,6 +12,6 @@
             "Example Domain"
         ],
         "h2_tags": [],
-        "crawled_at": "2026-04-17 14:16:16"
+        "crawled_at": "2026-04-17 14:52:04"
     }
 ]

@@ -4,7 +4,8 @@ import plotly.express as px
 import pandas as pd
 import sqlite3
 from urllib.parse import urlparse
-from analysis.insights import build_insights
+from dashboard.insights import build_insights
+
 
 def shorten_url(url):
     path = urlparse(url).path.strip("/")
@@ -54,7 +55,6 @@ def create_dashboard():
 
     df["short_url"] = df["url"].apply(shorten_url)
 
-    # Limit charts to top values so they are readable
     df_load = df.sort_values("load_time_seconds", ascending=False).head(15)
     df_words = df.sort_values("word_count", ascending=False).head(15)
     df_images = df.sort_values("image_count", ascending=False).head(15)
@@ -106,7 +106,6 @@ def create_dashboard():
     fig_links.update_xaxes(tickangle=-45)
     fig_links.update_layout(height=500, margin=dict(l=20, r=20, t=50, b=120))
 
-    # Insights
     insights = build_insights(df)
 
     def make_insight_table(records, title, value_key):
@@ -129,7 +128,6 @@ def create_dashboard():
             )
         ])
 
-    # Summary values
     website_url = session["website_url"].values[0] if len(session) > 0 else "N/A"
     total_pages = len(df)
     avg_load = round(df["load_time_seconds"].mean(), 3)
@@ -137,7 +135,6 @@ def create_dashboard():
     total_links = int(df["internal_links_count"].sum())
     broken_pages = int((df["status_code"] != 200).sum())
 
-    # Raw table
     table_data = df[[
         "short_url", "status_code", "title", "load_time_seconds",
         "word_count", "image_count", "internal_links_count"
